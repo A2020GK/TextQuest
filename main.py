@@ -4,6 +4,7 @@ with open("story.json") as f:
     story = json.load(f) # <-- Дерево истории
 
 current = "start" # <-- Текущий узел графа
+kind = 0
 
 while True:
     # 1. Вывести story[current]["text"]
@@ -24,13 +25,17 @@ while True:
     #   Что Вы хотите сделать?
     #   1. Уехать в деревню
     #   2. ...
-    #   
+    #
     print()
     print("Что выбираешь?\n")
     choices_keys = []
     for i, n in enumerate(story[current]["next"]):
         # i <-- Индекс варианта
-        # n <-- Словарь варианта
+        # n <-- Словарь
+
+        if type(n) is list:
+            n = n[0] if kind >= 0 else n[1]
+
         choices_keys.append(n)
         print(f"{i+1}.\t{story[n]["name"]}")
 
@@ -44,5 +49,9 @@ while True:
     # choice <-- Вариант, который выбрал пользователь
     # choices_keys <-- Доступные варианты
     current = choices_keys[choice]
+
+    if "kind" in story[current]:
+        kind += story[current]["kind"]
+
     print("\n========================\n")
     
